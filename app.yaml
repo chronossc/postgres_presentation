@@ -1,0 +1,47 @@
+application: html5slides
+version: 3
+runtime: python
+api_version: 1
+
+handlers:
+- url: /src
+  static_dir: src
+
+- url: /disclaimer.html
+  static_files: disclaimer.html
+  upload: disclaimer.html
+
+- url: /favicon.ico
+  static_files: favicon.ico
+  upload: favicon.ico
+
+# Server appropriate mimetype for certain static content.
+- url: /cache.manifest
+  static_files: cache.manifest
+  mime_type: text/cache-manifest
+  upload: cache.manifest
+
+- url: /(.*\.mp4)
+  static_files: /\1
+  mime_type: video/mp4
+  upload: /(.*\.mp4)
+
+- url: /(.*\.webm)
+  static_files: /\1
+  mime_type: video/webm
+  upload: /(.*\.webm)
+
+- url: /(.*\.(ogg|oga))
+  static_files: /\1
+  mime_type: audio/ogg
+  upload: /(.*\.(ogg|oga))
+
+- url: /(.*\.ogv)
+  static_files: /\1
+  mime_type: video/ogg
+  upload: /(.*\.ogv)
+
+- url: /
+  static_files: html5.html
+  upload: html5.html
+

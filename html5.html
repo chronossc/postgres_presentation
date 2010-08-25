@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Original Modifications: Ernest Delgado (ernestd@google.com)
+                 Alex Russell (slightlyoff@chromium.org)
+                 Brad Neuberg
+
+  This is a slideshow based on http://slides.html5rocks.com
+  This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :)
+
+-->
+<html manifest="cache.manifest">
+  <head>
+    <!--[if gte IE 9]>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+    <![endif]-->
+
+    <meta charset="utf-8" />
+    <title>Postgresql Introduction - Felipe Prenholato, Ago/2010</title>
+    <link href="google_local_import_font.css" rel="stylesheet" type="text/css" />
+
+    <style>
+      body {
+        font: 16px "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0px; top: 0px;
+      }
+
+      .presentation {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        left: 0px;
+        top: 0px;
+        display: block;
+        overflow: hidden;
+        background: #778;
+      }
+
+      .slides {
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        position: absolute;
+        display: block;
+        -webkit-transition: -webkit-transform 1s ease-in-out;
+        -moz-transition: -moz-transform 1s ease-in-out;
+        -o-transition: -o-transform 1s ease-in-out;
+        transition: transform 1s ease-in-out;
+      }
+
+      .slide {
+        display: none;
+        position: absolute;
+        overflow: hidden;
+        width: 900px;
+        height: 700px;
+        left: 50%;
+        top: 50%;
+        margin-top: -350px;
+        background-color: #eee;
+        background: -webkit-gradient(linear, left bottom, left top, from(#bbd), to(#fff));
+        background: -moz-linear-gradient(bottom, #bbd, #fff);
+        background: linear-gradient(bottom, #bbd, #fff);
+        -webkit-transition: margin 0.25s ease-in-out;
+        -moz-transition: margin 0.25s ease-in-out;
+        -o-transition: margin 0.25s ease-in-out;
+        transition: margin 0.25s ease-in-out;
+      }
+
+      .slide:nth-child(even) {
+        -moz-border-radius: 20px 0;
+        -khtml-border-radius: 20px 0;
+        border-radius: 20px 0; /* includes Opera 10.5+ */
+        -webkit-border-top-left-radius: 20px;
+        -webkit-border-bottom-right-radius: 20px;
+      }
+
+      .slide:nth-child(odd) {
+        -moz-border-radius: 0 20px;
+        -khtml-border-radius: 0 20px;
+        border-radius: 0 20px;
+        -webkit-border-top-right-radius: 20px;
+        -webkit-border-bottom-left-radius: 20px;
+      }
+
+      .slide p, .slide textarea {
+        font-size: 20px;
+      }
+
+      .slide .counter {
+        color: #999999;
+        position: absolute;
+        left: 20px;
+        bottom: 20px;
+        display: block;
+        font-size: 12px;
+      }
+
+      .slide.title > .counter,
+      .slide.segue > .counter,
+      .slide.mainTitle > .counter {
+        display: none;
+      }
+
+      .force-render {
+        display: block;
+        visibility: hidden;
+      }
+
+      .slide.far-past {
+        display: block;
+        margin-left: -2400px;
+      }
+
+      .slide.past {
+        visibility: visible;
+        display: block;
+        margin-left: -1400px;
+      }
+
+      .slide.current {
+        visibility: visible;
+        display: block;
+        margin-left: -450px;
+      }
+
+      .slide.future {
+        visibility: visible;
+        display: block;
+        margin-left: 500px;
+      }
+
+      .slide.far-future {
+        display: block;
+        margin-left: 1500px;
+      }
+
+      body.three-d div.presentation {
+        /*background: -webkit-gradient(radial, 50% 50%, 10, 50% 50%, 1000, from(#333), to(#000));        */
+      }
+
+      body.three-d div.slides {
+        -webkit-transform: translateX(50px) scale(0.8) rotateY(10deg);
+        -moz-transform: translateX(50px) scale(0.8) rotateY(10deg);
+        -o-transform: translateX(50px) scale(0.8) rotateY(10deg);
+        transform: translateX(50px) scale(0.8) rotateY(10deg);
+      }
+
+      /* Content */
+      /*
+        Font sizes:
+        header h1 - 50px
+        h2, p - 20px
+        default, pre, input - 16px
+      */
+
+      @font-face { font-family: 'Junction'; src: url(src/Junction02.otf); }
+      @font-face { font-family: 'LeagueGothic'; src: url(src/LeagueGothic.otf); }
+
+      header {
+        font-family: 'Droid Sans';
+        font-weight: normal;
+        letter-spacing: -.05em;
+        color: black;
+        text-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px;
+        position: absolute;
+        left: 30px;
+        top: 25px;
+        margin: 0;
+        padding: 0;
+        font-size: 50px;
+      }
+
+      h1 {
+        font-size: 100%;
+        display: inline;
+      	font-weight: normal;
+      	padding: 0;
+      	margin: 0;
+      }
+
+      h2 {
+        font-family: 'Droid Sans';
+        color: black;
+        font-size: 20px;
+        padding: 0;
+        margin: 15px 0 5px 0;
+      }
+
+      h2:first-child {
+        margin-top: 0;
+      }
+
+
+      section, footer {
+        font-family: 'Droid Sans';
+        color: #3f3f3f;
+        text-shadow: rgba(0, 0, 0, 0.2) 0 2px 5px;
+        margin: 100px 30px 0;
+        display: block;
+        overflow: hidden;
+      }
+
+      footer {
+        font-size: 12px;
+        margin: 20px 0 0 30px;
+      }
+
+      section footer {
+        bottom: 22px;
+        color: #999999;
+        display: block;
+        font-size: 12px;
+        left: 21px;
+        line-height: 12px;
+        position: absolute;
+      }
+
+
+
+
+      a {
+        color: inherit;
+        display: inline-block;
+        text-decoration: none;
+        line-height: 110%;
+        border-bottom: 2px solid #3f3f3f;
+      }
+
+      .gmap a {
+        line-height: 100%;
+        border-bottom: none;
+      }
+
+      li {
+        list-style: none;
+        padding: 10px 0;
+      }
+
+      button {
+        font-size: 20px;
+      }
+
+      pre button {
+        margin: 2px;
+      }
+
+      .summary {
+        font-size: 30px;
+      }
+
+      .bullets {
+        font-size: 40px;
+      }
+
+      section.left {
+        float: left;
+        width: 390px;
+      }
+
+      section.small {
+        font-size: 24px;
+      }
+
+      section.small ul {
+        margin: 0 0 0 15px;
+        padding: 0;
+      }
+
+      section.small li {
+        padding-bottom: 0;
+      }
+
+      section.middle {
+        margin: 50px 0; 
+        text-align: center;
+        display: table-cell;
+        vertical-align: middle;
+        height: 700px;
+        width: 900px;
+      }
+
+      pre {
+        text-align: left;
+        font-family: 'Droid Sans Mono', Courier;        
+        padding: 10px 20px;
+        background: rgba(255, 0, 0, 0.05);
+        -webkit-border-radius: 8px;
+        -khtml-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 0, 0, 0.2);
+      }
+
+      pre select {
+        font-family: Monaco, Courier;
+        border: 1px solid #c61800;
+      }
+
+      input {
+        font-size: 16px;
+        margin-right: 10px;
+        font-family: Helvetica;
+        padding: 3px;
+      }
+      input[type="range"] {
+        width: 100%;
+      }
+
+      button {
+        margin: 20px 10px 0 0;
+        font-family: Verdana;
+      }
+
+      button.large {
+        font-size: 32px;
+      }
+
+      pre b {
+        font-weight: normal;
+        color: #c61800;
+        text-shadow: #c61800 0 0 1px;
+        /*letter-spacing: -1px;*/
+      }
+      pre em {
+        font-weight: normal;
+        font-style: normal;
+        color: #18a600;
+        text-shadow: #18a600 0 0 1px;
+      }
+      pre input[type="range"] {
+        height: 6px;
+        cursor: pointer;
+        width: auto;
+      }
+
+      div.example {
+        display: block;
+        padding: 10px 20px;
+        color: black;
+        background: rgba(255, 255, 255, 0.4);
+        -webkit-border-radius: 8px;
+        -khtml-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+      }
+
+      video {
+        -moz-border-radius: 8px;
+        -khtml-border-radius: 8px;
+        -webkit-border-radius: 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+      }
+
+      .css,
+      .js,
+      .html,
+      .key {
+        font-family: 'Droid Sans';
+        color: black;
+        display: inline-block;
+        padding: 6px 10px 3px 10px;
+        font-size: 25px;
+        line-height: 30px;
+        text-shadow: none;
+        letter-spacing: 0;
+        bottom: 10px;
+        position: relative;
+        -moz-border-radius: 10px;
+        -khtml-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        background: white;
+        box-shadow: rgba(0, 0, 0, 0.1) 0 2px 5px;
+        -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 5px;
+        -moz-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 5px;
+        -o-box-shadow: rgba(0, 0, 0, 0.1) 0 2px 5px;
+      }
+
+      .key { font-family: Arial; }
+
+      :not(header) > .css,
+      :not(header) > .js,
+      :not(header) > .html,
+      :not(header) > .key {
+        margin: 0 5px;
+        bottom: 4px;
+      }
+
+      .css {
+        background: -webkit-gradient(linear, left top, left bottom, from(#ff4), to(#ffa));
+        background-color: #ff4;
+        background: -moz-linear-gradient(left top, #ff4, #ffa);
+      }
+      .js {
+        background: -webkit-gradient(linear, left top, left bottom, from(#4f4), to(#afa));
+        background-color: #4f4;
+        background: -moz-linear-gradient(left top, #4f4, #afa);
+      }
+      .html {
+        background: -webkit-gradient(linear, left top, left bottom, from(#e88), to(#fee));
+        background-color: #e88;
+        background: -moz-linear-gradient(left top, #e88, #fee);
+      }
+
+      .two-column {
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2;
+      }
+
+      .summary li::before, .bullets li::before {
+        content: '· ';
+      }
+
+      .stroke {
+        -webkit-text-stroke-color: red;
+        -webkit-text-stroke-width: 1px;
+      } /* currently webkit-only */
+
+      .center {
+        text-align: center;
+      }
+
+      .formula {
+        font-size: 50px;
+      }
+
+      #presentation-counter {
+        color: #ccc;
+        font-size: 100px;
+        letter-spacing: 1px;
+        position: absolute;
+        top: 40%;
+        left: 0;
+        width: 100%;
+        text-align: center;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="presentation">
+      <div id="presentation-counter"></div>
+
+      <div class="slides">
+
+        <div class="slide">
+          <style>
+            .landing h1 {
+              font-size: 45px;
+            }
+          </style>
+          <section class="middle landing">
+          <h1>Uma breve introdução ao uso do <br/>PostgreSQL no dia a dia.</h1>
+            <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+          </section>
+        </div>
+
+        <div class="slide">
+          <style>
+
+            .indice { 
+              counter-reset: level1;
+            }
+
+            .indice h2 {
+              text-align: left;
+              margin: 0 auto;
+              width: 70%;
+              font-size: 30px;
+            }
+
+            .indice p {
+              font-size: 25px;
+            }
+
+            .indice ol,
+            .indice ol li {
+              text-align: left;
+              font-size: 20px;
+              line-height: 20px;
+              margin-bottom: 0;
+              margin-top: 0;
+              padding-top: 0;
+              padding-bottom: 0;
+            }
+
+            .indice ol li {
+              margin-bottom: 3px;
+            }
+
+            .indice > ol {
+              margin: 30px auto;
+              width: 70%;
+            }
+
+            .indice > ol > li {
+              margin-bottom: 10px;
+            }
+
+            .indice ol li:before {
+                content: counter(level1) ". ";
+                counter-increment: level1;
+            }
+            .indice ol li ol {
+                list-style-type: none;
+                counter-reset: level2;
+            }
+            .indice ol li ol li:before {
+                content: counter(level1) "." counter(level2) " ";
+                counter-increment: level2;
+            }
+          </style>
+          <section class="middle indice">
+            <h2>Indíce</h2>
+            <ol>
+              <li>Rapida introdução - O que é PostgreSQL?</li>
+              <li>Uso básico
+                <ol>
+                  <li>create table</li>
+                  <li>drop table</li>
+                  <li>populando base de dados</li>
+                  <li>pg_dump</li>
+                </ol>
+              </li>
+              <li>Postgres shell
+                <ol>
+                  <li>select</li>
+                  <li>insert</li>
+                  <li>update</li>
+                  <li>delete</li>
+                  <li>exibir detalhes de tabelas, métodos, etc ...</li>
+                </ol>
+              </li>
+              <li>Permissionamento de usuários no PostgreSQL
+                <ol>
+                  <li>createuser</li>
+                  <li>pg_hba.conf</li>
+                </ol>
+              </li>
+              <li>Conectando com o PHP
+                <ol>
+                  <li>Habilitando suporte</li>
+                  <li>Conectando</li>
+                </ol>
+              </li>
+              <li>Conectando com o Python
+                <ol>
+                  <li>Habilitando suporte</li>
+                  <li>Conectando</li>
+                </ol>
+              </li>
+              <li>Uso no Django
+                <ol>
+                  <li>Habilitando suporte</li>
+                  <li>Conectando</li>
+                </ol>
+              </li>
+              <li>Links úteis e refêrencia</li>
+            </ol>
+            <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+          </section>
+        </div>
+
+        <div class="slide">
+          <style>
+            .intro h2 {
+              text-align: left;
+              margin: 0 auto;
+              width: 70%;
+              font-size: 30px;
+            }
+          </style>
+          <section class="intro">
+            <h2>Uma breve introdução ao uso do <br/>PostgreSQL no dia a dia.</h2>
+            <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+          </section>
+        </div>
+
+        <div class="slide">
+          <style>
+            #video-column {
+              float: left;
+              width: 50%;
+              margin-top: 20px;
+            }
+            #reflection-button {
+              margin: 20px 0;
+            }
+            #audio-column {
+              float: left;
+              width: 45%;
+              margin-top: 120px;
+            }
+            .media-buttons {
+              margin: 40px 0;
+            }
+          </style>
+          <header><span class="html">HTML</span> <h1>Audio + Video</h1></header>
+          <section>
+            <pre>&lt;<b>audio</b> src="sound.mp3" <b>controls</b>&gt;&lt;/audio&gt;
+document.getElementById("audio").<b>muted</b> = false;
+
+&lt;<b>video</b> src="movie.mp4" <b>autoplay</b> <b>controls</b>&gt;&lt;/video&gt;
+document.getElementById("video").<b>play</b>();
+</pre>
+            <div id="video-column" class="center">
+              <input type="button" id="reflection-button" onclick="addReflection()" value="Add CSS reflection to video" />
+              <video width="390" id="clip" controls>
+                <source src="src/chrome-japan.webm" type="video/webm" />
+                <source src="src/chrome-japan.mp4" type="video/mp4" />
+                <source src="src/chrome_japan.ogv" type="video/ogg" />
+                Your browser does not support the video tag
+              </video>
+              <div class="media-buttons">
+                <input type="button" id="play-button" onclick="PlayVideo()"; value="Play" />
+                <input type="button" id="pause-button" onclick="PauseVideo()"; value="Pause" disabled />
+                <input type="button" id="mute" onclick="MuteUnMute()" value="Mute" />
+              </div>
+            </div>
+
+            <div id="audio-column" class="center">
+              <audio id="audio-clip" width="670" controls>
+                <source src="src/rushus-modal_blues.mp3" type="audio/mpeg" />
+                <source src="src/rushus-modal_blues.webm" type="audio/webm" />
+                Your browser does not support the audio tag
+              </audio>
+              <div class="media-buttons">
+                <input type=button id="audio-play-button" onclick="PlayAudio()" value="Play" />
+                <input type=button id="audio-pause-button" onclick="PauseAudio()" value="Pause" disabled />
+                <input type=button id="audio-mute" onclick="MuteUnMuteAudio()" value="Mute" />
+              </div>
+            </div>
+            <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :)</footer>
+          </section>
+          <script>
+            var videoClip = document.getElementById('clip');
+            var playButton = document.getElementById('play-button');
+            var pauseButton = document.getElementById('pause-button');
+
+            function PlayVideo() {
+              videoClip.play();
+              playButton.disabled = true;
+              pauseButton.disabled = false;
+            }
+
+            function PauseVideo() {
+              videoClip.pause();
+              playButton.disabled = false;
+              pauseButton.disabled = true;
+            }
+
+            function MuteUnMute() {
+              document.getElementById('mute').value = videoClip.muted ? 'Mute' : 'Unmute';
+              videoClip.muted = videoClip.muted ? false : true;
+            }
+
+            function OnFinished() {
+              playButton.disabled = false;
+              pauseButton.disabled = true;
+            }
+
+            function addReflection() {
+              videoClip.style.webkitBoxReflect = videoClip.style.webkitBoxReflect !== '' ? '' : "below 0px -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), color-stop(0.55, transparent), to(white))";
+            }
+          </script>
+
+          <script>
+            var audioClip = document.getElementById('audio-clip');
+            var audioPlayButton = document.getElementById('audio-play-button');
+            var audioPauseButton = document.getElementById('audio-pause-button');
+            audioClip.addEventListener('ended', OnAudioFinished, false);
+
+            function PlayAudio() {
+              audioClip.play();
+              audioPlayButton.disabled = true;
+              audioPauseButton.disabled = false;
+            }
+
+            function PauseAudio() {
+              audioClip.pause();
+              audioPlayButton.disabled = false;
+              audioPauseButton.disabled = true;
+            }
+
+            function MuteUnMuteAudio() {
+              document.getElementById('audio-mute').value = audioClip.muted ? 'Mute' : 'Unmute';
+              audioClip.muted = audioClip.muted ? false : true;
+            }
+
+            function OnAudioFinished() {
+              audioPlayButton.disabled = false;
+              audioPauseButton.disabled = true;
+            }
+          </script>
+        </div>
+
+        <div class="slide">
+          <style>
+          #columns-no-example {
+            -webkit-column-count: 2;
+            -webkit-column-rule: 1px solid #bbb;
+            -webkit-column-gap: 2em;
+            -moz-column-count: 2;
+            -moz-column-rule: 1px solid #bbb;
+            -moz-column-gap: 2em;
+            column-count: 2;
+            column-rule: 1px solid #bbb;
+            column-gap: 2em;
+          }
+          #columns-no-example p {
+            font-size: 15px;
+          }
+          </style>
+          <header><span class="css">CSS</span> <h1>Columns</h1></header>
+          <section>
+            <pre>-webkit-<b>column-count</b>: <span id="columns-no-value">2</span>; <input type="range" min="1" max="6" value="2" onchange="changeColumnNoSlider(event)">
+-webkit-<b>column-rule</b>: 1px solid #bbb;
+-webkit-<b>column-gap</b>: 2em;</pre>
+
+            <div id="columns-no-example" class="example">
+              <p>
+                In March 1936, an unusual confluence of forces occurred in 
+                Santa Clara County.
+              </p>
+              <p>
+                A long cold winter delayed the blossoming of the millions of 
+                cherry, apricot, peach, and prune plum trees covering hundreds 
+                of square miles of the Valley floor. Then, unlike many years, 
+                the rains that followed were light and too early to knock 
+                the blossoms from their branches.
+              </p>
+              <p>
+                Instead, by the billions, they all burst open at once. 
+                Seemingly overnight, the ocean of green that was the Valley 
+                turned into a low, soft, dizzyingly perfumed cloud of pink 
+                and white. Uncounted bees and yellow jackets, newly born, 
+                raced out of their hives and holes, overwhelmed by this 
+                impossible banquet.
+              </p>
+              <p>
+                Then came the wind.
+              </p>
+              <p>
+                It roared off the Pacific Ocean, through the nearly 
+                uninhabited passes of the Santa Cruz Mountains and then, 
+                flattening out, poured down into the great alluvial plains 
+                of the Valley. A tidal bore of warm air, it tore along the 
+                columns of trees, ripped the blossoms apart and carried them 
+                off in a fluttering flood of petals like foam rolling up a 
+                beach.
+              </p>
+              <p>
+                This perfumed blizzard hit Stevens Creek Boulevard, a two-lane
+                road with a streetcar line down its center, that was the main
+                road in the West Valley. It froze traffic, as drivers found
+                themselves lost in a soft, muted whiteout. Only the streetcar,
+                its path predetermined, passed on...
+              </p>
+            </div>
+            <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :)</footer>
+          </section>
+
+          <script>
+            function changeColumnNoSlider(event) {
+              var val = event.target.value;
+              document.getElementById('columns-no-value').innerHTML = val;
+              document.getElementById('columns-no-example').style.webkitColumnCount = val;
+
+            }
+          </script>
+        </div>
+
+        <div class="slide">
+          <style>
+            span.space {
+              padding: 0 5px;
+            }
+          </style>
+          <header><h1>Chrome Frame</h1></header>
+          <section>
+            <ul class="bullets">
+              <li>Minimal effort for bringing IE6, 7 and 8 up to the latest HTML5 technologies</li>
+              <li>Two ways to get your websites ready for Chrome Frame:</li>
+        		</ul>
+      			<p>Client side:</p>
+      			<pre>&lt;meta http-equiv="X-UA-Compatible" content="chrome=1"></pre>
+      			<p>Server side:</p>
+      			<pre>X-UA-Compatible: chrome=1</pre>
+      			<p style="font-size: 30px">
+              Try to load this presentation in IE!
+            </p>
+            <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :)</footer>
+          </section>
+        </div>
+
+      </div> <!-- slides -->
+
+    </div> <!-- presentation -->
+
+    <script>
+      (function() {
+        var doc = document;
+        var disableBuilds = true;
+
+        var ctr = 0;
+        var spaces = /\s+/, a1 = [''];
+
+        var toArray = function(list) {
+          return Array.prototype.slice.call(list || [], 0);
+        };
+
+        var byId = function(id) {
+          if (typeof id == 'string') { return doc.getElementById(id); }
+          return id;
+        };
+
+        var query = function(query, root) {
+          if (!query) { return []; }
+          if (typeof query != 'string') { return toArray(query); }
+          if (typeof root == 'string') {
+            root = byId(root);
+            if(!root){ return []; }
+          }
+
+          root = root || document;
+          var rootIsDoc = (root.nodeType == 9);
+          var doc = rootIsDoc ? root : (root.ownerDocument || document);
+
+          // rewrite the query to be ID rooted
+          if (!rootIsDoc || ('>~+'.indexOf(query.charAt(0)) >= 0)) {
+            root.id = root.id || ('qUnique' + (ctr++));
+            query = '#' + root.id + ' ' + query;
+          }
+          // don't choke on something like ".yada.yada >"
+          if ('>~+'.indexOf(query.slice(-1)) >= 0) { query += ' *'; }
+
+          return toArray(doc.querySelectorAll(query));
+        };
+
+        var strToArray = function(s) {
+          if (typeof s == 'string' || s instanceof String) {
+            if (s.indexOf(' ') < 0) {
+              a1[0] = s;
+              return a1;
+            } else {
+              return s.split(spaces);
+            }
+          }
+          return s;
+        };
+
+        var addClass = function(node, classStr) {
+          classStr = strToArray(classStr);
+          var cls = ' ' + node.className + ' ';
+          for (var i = 0, len = classStr.length, c; i < len; ++i) {
+            c = classStr[i];
+            if (c && cls.indexOf(' ' + c + ' ') < 0) {
+              cls += c + ' ';
+            }
+          }
+          node.className = cls.trim();
+        };
+
+        var removeClass = function(node, classStr) {
+          var cls;
+          if (classStr !== undefined) {
+            classStr = strToArray(classStr);
+            cls = ' ' + node.className + ' ';
+            for (var i = 0, len = classStr.length; i < len; ++i) {
+              cls = cls.replace(' ' + classStr[i] + ' ', ' ');
+            }
+            cls = cls.trim();
+          } else {
+            cls = '';
+          }
+          if (node.className != cls) {
+            node.className = cls;
+          }
+        };
+
+        var toggleClass = function(node, classStr) {
+          var cls = ' ' + node.className + ' ';
+          if (cls.indexOf(' ' + classStr.trim() + ' ') >= 0) {
+            removeClass(node, classStr);
+          } else {
+            addClass(node, classStr);
+          }
+        };
+
+        var ua = navigator.userAgent;
+        var isFF = parseFloat(ua.split('Firefox/')[1]) || undefined;
+        var isWK = parseFloat(ua.split('WebKit/')[1]) || undefined;
+        var isOpera = parseFloat(ua.split('Opera/')[1]) || undefined;
+
+        var canTransition = (function() {
+          var ver = parseFloat(ua.split('Version/')[1]) || undefined;
+          // test to determine if this browser can handle CSS transitions.
+          var cachedCanTransition = 
+            (isWK || (isFF && isFF > 3.6 ) || (isOpera && ver >= 10.5));
+          return function() { return cachedCanTransition; }
+        })();
+
+        //
+        // Slide class
+        //
+        var Slide = function(node, idx) {
+          this._node = node;
+          if (idx >= 0) {
+            this._count = idx + 1;
+          }
+          if (this._node) {
+            addClass(this._node, 'slide distant-slide');
+          }
+          this._makeCounter();
+          this._makeBuildList();
+        };
+
+        Slide.prototype = {
+          _node: null,
+          _count: 0,
+          _buildList: [],
+          _visited: false,
+          _currentState: '',
+          _states: [ 'distant-slide', 'far-past',
+                     'past', 'current', 'future',
+                     'far-future', 'distant-slide' ],
+          setState: function(state) {
+            if (typeof state != 'string') {
+              state = this._states[state];
+            }
+            if (state == 'current' && !this._visited) {
+              this._visited = true;
+              this._makeBuildList();
+            }
+            removeClass(this._node, this._states);
+            addClass(this._node, state);
+            this._currentState = state;
+
+            // delay first auto run. Really wish this were in CSS.
+            /*
+            this._runAutos();
+            */
+            var _t = this;
+            setTimeout(function(){ _t._runAutos(); } , 400);
+          },
+          _makeCounter: function() {
+            if(!this._count || !this._node) { return; }
+            var c = doc.createElement('span');
+            c.innerHTML = this._count;
+            c.className = 'counter';
+            this._node.appendChild(c);
+          },
+          _makeBuildList: function() {
+            this._buildList = [];
+            if (disableBuilds) { return; }
+            if (this._node) {
+              this._buildList = query('[data-build] > *', this._node);
+            }
+            this._buildList.forEach(function(el) {
+              addClass(el, 'to-build');
+            });
+          },
+          _runAutos: function() {
+            if (this._currentState != 'current') {
+              return;
+            }
+            // find the next auto, slice it out of the list, and run it
+            var idx = -1;
+            this._buildList.some(function(n, i) {
+              if (n.hasAttribute('data-auto')) {
+                idx = i;
+                return true;
+              }
+              return false;
+            });
+            if (idx >= 0) {
+              var elem = this._buildList.splice(idx, 1)[0];
+              var transitionEnd = isWK ? 'webkitTransitionEnd' : (isFF ? 'mozTransitionEnd' : 'oTransitionEnd');
+              var _t = this;
+              if (canTransition()) {
+                var l = function(evt) {
+                  elem.parentNode.removeEventListener(transitionEnd, l, false);
+                  _t._runAutos();
+                };
+                elem.parentNode.addEventListener(transitionEnd, l, false);
+                removeClass(elem, 'to-build');
+              } else {
+                setTimeout(function() {
+                  removeClass(elem, 'to-build');
+                  _t._runAutos();
+                }, 400);
+              }
+            }
+          },
+          buildNext: function() {
+            if (!this._buildList.length) {
+              return false;
+            }
+            removeClass(this._buildList.shift(), 'to-build');
+            return true;
+          },
+        };
+
+        //
+        // SlideShow class
+        //
+        var SlideShow = function(slides) {
+          this._slides = (slides || []).map(function(el, idx) {
+            return new Slide(el, idx);
+          });
+
+          var h = window.location.hash;
+          try {
+            this.current = parseInt(h.split('#slide')[1], 10);
+          }catch (e) { /* squeltch */ }
+          this.current = isNaN(this.current) ? 1 : this.current;
+          var _t = this;
+          doc.addEventListener('keydown', 
+              function(e) { _t.handleKeys(e); }, false);
+          doc.addEventListener('mousewheel', 
+              function(e) { _t.handleWheel(e); }, false);
+          doc.addEventListener('DOMMouseScroll', 
+              function(e) { _t.handleWheel(e); }, false);
+          doc.addEventListener('touchstart', 
+              function(e) { _t.handleTouchStart(e); }, false);
+          doc.addEventListener('touchend', 
+              function(e) { _t.handleTouchEnd(e); }, false);
+          window.addEventListener('popstate', 
+              function(e) { _t.go(e.state); }, false);
+          this._update();          
+        };
+
+        SlideShow.prototype = {
+          _slides: [],
+          _update: function(dontPush) {
+            document.querySelector('#presentation-counter').innerText = this.current;
+            if (history.pushState) {
+              if (!dontPush) {
+                history.pushState(this.current, 'Slide ' + this.current, '#slide' + this.current);
+              }
+            } else {
+              window.location.hash = 'slide' + this.current;
+            }
+            for (var x = this.current-1; x < this.current + 7; x++) {
+              if (this._slides[x-4]) {
+                this._slides[x-4].setState(Math.max(0, x-this.current));
+              }
+            }
+          },
+
+          current: 0,
+          next: function() {
+            if (!this._slides[this.current-1].buildNext()) {
+              this.current = Math.min(this.current + 1, this._slides.length);
+              this._update();
+            }
+          },
+          prev: function() {
+            this.current = Math.max(this.current-1, 1);
+            this._update();
+          },
+          go: function(num) {
+            if (history.pushState && this.current != num) {
+              history.replaceState(this.current, 'Slide ' + this.current, '#slide' + this.current);
+            }
+            this.current = num;
+            this._update(true);
+          },
+
+          _notesOn: false,
+          showNotes: function() {
+            var isOn = this._notesOn = !this._notesOn;
+            query('.notes').forEach(function(el) {
+              el.style.display = (notesOn) ? 'block' : 'none';
+            });
+          },
+          switch3D: function() {
+            toggleClass(document.body, 'three-d');
+          },
+          handleWheel: function(e) {
+            var delta = 0;
+            if (e.wheelDelta) {
+              delta = e.wheelDelta/120;
+              if (isOpera) {
+                delta = -delta;
+              }
+            } else if (e.detail) {
+              delta = -e.detail/3;
+            }
+
+            if (delta > 0 ) {
+              this.prev();
+              return;
+            }
+            if (delta < 0 ) {
+              this.next();
+              return;
+            }
+          },
+          handleKeys: function(e) {
+
+            if (/^(input|textarea)$/i.test(e.target.nodeName)) return;
+
+            switch (e.keyCode) {
+              case 37: // left arrow
+                this.prev(); break;
+              case 39: // right arrow
+              case 32: // space
+                this.next(); break;
+              case 50: // 2
+                this.showNotes(); break;
+              case 51: // 3
+                this.switch3D(); break;
+            }
+          },
+          _touchStartX: 0,
+          handleTouchStart: function(e) {
+            this._touchStartX = e.touches[0].pageX;
+          },
+          handleTouchEnd: function(e) {
+            var delta = this._touchStartX - e.changedTouches[0].pageX;
+            var SWIPE_SIZE = 150;
+            if (delta > SWIPE_SIZE) {
+              this.next();
+            } else if (delta< -SWIPE_SIZE) {
+              this.prev();
+            }
+          },
+        };
+
+        // Initialize
+        var slideshow = new SlideShow(query('.slide'));
+      })();
+    </script>
+
+    <!--[if lt IE 9]>
+    <script 
+      src="CFInstall.min.js">
+    </script>
+		<script>CFInstall.check({ mode: "overlay" });</script>
+    <![endif]-->
+  </body>
+</html>
