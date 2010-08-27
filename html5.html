@@ -303,10 +303,10 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                 width: 900px;
             }
 
-            pre,code {
+            pre, code {
                 text-align: left;
                 font-family: 'Consolas', Courier;
-                padding: 10px 20px;
+                padding: 0 20px;
                 background: rgba(0, 0, 0, 0.8);
                 -webkit-border-radius: 8px;
                 -khtml-border-radius: 8px;
@@ -611,7 +611,7 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                         <li>Uso básico
                         <ol>
                             <li><a class='goto' href='#slide5'>createdb / dropdb</a></li>
-                            <li><a class='goto' href='#slide6'>createtable / droptable</a></li>
+                            <li><a class='goto' href='#slide6'>createuser / dropuser</a></li>
                             <li>Populando a base / Scripting</li>
                             <li>Criando dumps (pg_dump)</li>
                         </ol>
@@ -730,6 +730,41 @@ CREATE DATABASE test_db OWNER felipe ENCODING 'UTF8' TEMPLATE template0
 
  ~ $ dropdb -e test_db
 DROP DATABASE test_db;
+                    </code>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Uso básico - createuser / dropuser</h2>
+
+                    <p>O <strong>createuser</strong> permite criar usuários com
+                    diversos níveis de acesso, dos quais
+                    <em>superuser</em>, <em>createrole</em> e <em>createdb</em>
+                    são os principais. O comando é interativo a não ser que
+                    você especifique uma das opções. A exclusão do
+                    usuário com <strong>dropuser</strong> só pode ser feita se
+                    este não tiver nenhuma base relacionada a ele.</p>
+
+                    <code>
+ ~ $ createuser -e -W felipe
+Shall the new role be a superuser? (y/n) n
+Shall the new role be allowed to create databases? (y/n) n
+Shall the new role be allowed to create more new roles? (y/n) n
+Password:
+CREATE ROLE felipe NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;
+
+ ~ $ createdb -O felipe test_db && dropuser felipe
+dropuser: removal of role "felipe" failed: ERROR:  role "felipe" cannot be dropped 
+because some objects depend on it
+DETAIL:  owner of database test_db
+
+ ~ $ dropdb test_db && dropuser -e felipe
+DROP ROLE felipe;
                     </code>
 
                     <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
