@@ -612,8 +612,8 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                         <ol>
                             <li><a class='goto' href='#slide5'>createdb / dropdb</a></li>
                             <li><a class='goto' href='#slide6'>createuser / dropuser</a></li>
-                            <li>Populando a base / Scripting</li>
-                            <li>Criando dumps (pg_dump)</li>
+                            <li><a class='goto' href='#slide7'>Populando a base / Scripting</a></li>
+                            <li><a class='goto' href='#slide8'>Criando dumps (pg_dump)</a></li>
                         </ol>
                         </li>
                         <li>Postgres shell
@@ -776,26 +776,30 @@ DROP ROLE felipe;
                     <style>
                     </style>
                     <section class="intro text">
-                    <h2>Funcionalidades mais interessantes</h2>
+                    <h2>Populando a base / Scripting</h2>
 
-                    <ul>
-                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
-                        'read locks' assegurando o principio ACID (atomicity, consistency,
-                        isolation, durability), que garante a consistência da base.</li>
-                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
-                        indíces criados pelos usuários.</li>
-                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
-                        um tipo de programação bastante complexa mais perto da engine da
-                        base de dados, garantindo melhor performance.</li>
-                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
-                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
-                        PHP e outras faz com que possa se usar o melhor de cada
-                        linguagem para manipulação dos dados.</li>
-                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
-                        usuário.</li>
-                        <li>Herança entre tabelas (similar a herança de classes em
-                        Python/PHP).</li>
-                    </ul>
+                    <p>O PostgreSQL suporta SQL como outros SGBDs, logo ele
+                    suporta scripting. Dumps são nada mais que scripts, e é
+                    normal que precisemos sempre popular bases para testes ou
+                    desenvolvimento. Existem várias maneiras de se popular uma
+                    base e de enviar comandos SQL para o PosgreSQL sem entrar
+                    em seu shell:</p>
+
+                    <code>
+ ~ $ # populando de arquivos e de outra base
+ ~ $ psql -U felipe test_db < dump_de_alguma_base.sql
+ ~ $ pg_dump -U felipe test_db | psql -U felipe test_db_2
+
+ ~ $ # enviando comandos
+ ~ $ psql -U felipe test_db <<< "select id,username from django_users; select id,username 
+ from django_users limit 5;"
+
+ ~ $ # enviando muitos comandos via bash
+ ~ $ psql -U felipe test_db << EOF
+insert into django_users (username) values ('felipe','daniel','juliana','antonio');
+delete from django_users where username='daniel';
+EOF
+                    </code>
 
                     <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
                     </section>
@@ -805,27 +809,30 @@ DROP ROLE felipe;
                     <style>
                     </style>
                     <section class="intro text">
-                    <h2>Funcionalidades mais interessantes</h2>
+                    <h2>Criando dumps (pg_dump)</h2>
+                    
+                    <p>Criar dumps é essencial para manter backups ou puxar
+                    bases para testes. O PostgreSQL suporta dezenas de opções
+                    sobre como construir o dump de sua base de dados. Vou
+                    mostrar as mais usadas:</p>
 
-                    <ul>
-                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
-                        'read locks' assegurando o principio ACID (atomicity, consistency,
-                        isolation, durability), que garante a consistência da base.</li>
-                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
-                        indíces criados pelos usuários.</li>
-                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
-                        um tipo de programação bastante complexa mais perto da engine da
-                        base de dados, garantindo melhor performance.</li>
-                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
-                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
-                        PHP e outras faz com que possa se usar o melhor de cada
-                        linguagem para manipulação dos dados.</li>
-                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
-                        usuário.</li>
-                        <li>Herança entre tabelas (similar a herança de classes em
-                        Python/PHP).</li>
-                    </ul>
+                    <code>
+ ~ $ # dump normal, direcionado para arquivo
+ ~ $ pg_dump -U felipe test_db > test_db.sql
 
+ ~ $ # dump compactado com bzip2, útil para transporte dos dados e backups
+ ~ $ pg_dump -U felipe test_db | bzip2 -zv9 > test_db.sql
+
+ ~ $ # forçando encoding
+ ~ $ pg_dump -U felipe -E UTF-8 test_db
+
+ ~ $ # pegando só algumas tabelas
+ ~ $ pg_dump -U felipe -t auth_user -t auth_group test_db 
+
+ ~ $ # dump com inserts completos em vez de só copy (copy usa menos espaço, mas 
+ ~ $ # é mais difícil para trabalhar se você for editar/consultar o arquivo)
+ ~ $ pg_dump -U felipe --column-inserts test_db
+                    </code>
                     <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
                     </section>
                 </div>
