@@ -623,24 +623,9 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                         </ol>
                         </li>
                         <li><a class='goto' href='#slide14'>Permissionamento de usuários</a> <a class='goto' href='#slide15'>(exemplo)</a></li>
-                        <li>Conectando com o PHP
-                        <ol>
-                            <li>Habilitando suporte</li>
-                            <li>Conectando</li>
-                        </ol>
-                        </li>
-                        <li>Conectando com o Python
-                        <ol>
-                            <li>Habilitando suporte</li>
-                            <li>Conectando</li>
-                        </ol>
-                        </li>
-                        <li>Uso no Django
-                        <ol>
-                            <li>Habilitando suporte</li>
-                            <li>Conectando</li>
-                        </ol>
-                        </li>
+                        <li><a class='goto' href='#slide16'>Conectando com o PHP</a></li>
+                        <li><a class='goto' href='#slide17'>Conectando com o Python</a></li>
+                        <li><a class='goto' href='#slide18'>Conectando com o Django</a></li>
                         <li>Links úteis e refêrencia</li>
                     </ol>
                     </div>
@@ -1053,55 +1038,33 @@ host    amarokdb   felipe       127.0.0.1/32          password
                     <style>
                     </style>
                     <section class="intro text">
-                    <h2>Funcionalidades mais interessantes</h2>
+                    <h2>Conectando com o PHP</h2>
 
-                    <ul>
-                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
-                        'read locks' assegurando o principio ACID (atomicity, consistency,
-                        isolation, durability), que garante a consistência da base.</li>
-                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
-                        indíces criados pelos usuários.</li>
-                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
-                        um tipo de programação bastante complexa mais perto da engine da
-                        base de dados, garantindo melhor performance.</li>
-                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
-                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
-                        PHP e outras faz com que possa se usar o melhor de cada
-                        linguagem para manipulação dos dados.</li>
-                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
-                        usuário.</li>
-                        <li>Herança entre tabelas (similar a herança de classes em
-                        Python/PHP).</li>
-                    </ul>
+                    <p>É necessário compilar o php com
+                    <strong>--with-pgsql[=DIR]</strong> ou em sistemas debian
+                    like instalar o pacote <strong>php5-pgsql</strong>.
+                    Instalado o suporte, você usa assim:</p>
 
-                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
-                    </section>
-                </div>
+                    <code>
+&lt;?php // Exemplos em http://www.php.net/manual/en/pgsql.examples-basic.php
 
-                <div class="slide">
-                    <style>
-                    </style>
-                    <section class="intro text">
-                    <h2>Funcionalidades mais interessantes</h2>
+// Conectando na base
+$dbconn = pg_connect("host=localhost dbname=amarokdb user=felipe password=felipe")
 
-                    <ul>
-                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
-                        'read locks' assegurando o principio ACID (atomicity, consistency,
-                        isolation, durability), que garante a consistência da base.</li>
-                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
-                        indíces criados pelos usuários.</li>
-                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
-                        um tipo de programação bastante complexa mais perto da engine da
-                        base de dados, garantindo melhor performance.</li>
-                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
-                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
-                        PHP e outras faz com que possa se usar o melhor de cada
-                        linguagem para manipulação dos dados.</li>
-                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
-                        usuário.</li>
-                        <li>Herança entre tabelas (similar a herança de classes em
-                        Python/PHP).</li>
-                    </ul>
+// Faz a query
+$result = pg_query('SELECT author,title,time FROM "musics" order by "rating" desc')
+
+// Pega cada linha como um objeto e mostra resultados, ex:
+// Janis Joplin canta 'Summertime' em 4:07 minutos
+while ($music = pg_fetch_object($result)) {
+    echo $music-&gt;author + " canta '" + $music-&gt;title + "' em " + $music-&gt;time + " minutos"
+}
+
+// Libera o resultado e fecha a conexão
+pg_free_result($result);
+pg_close($dbconn);
+?&gt;
+                    </code>
 
                     <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
                     </section>
@@ -1111,26 +1074,68 @@ host    amarokdb   felipe       127.0.0.1/32          password
                     <style>
                     </style>
                     <section class="intro text">
-                    <h2>Funcionalidades mais interessantes</h2>
+                    <h2>Conectando com o Python</h2>
 
-                    <ul>
-                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
-                        'read locks' assegurando o principio ACID (atomicity, consistency,
-                        isolation, durability), que garante a consistência da base.</li>
-                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
-                        indíces criados pelos usuários.</li>
-                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
-                        um tipo de programação bastante complexa mais perto da engine da
-                        base de dados, garantindo melhor performance.</li>
-                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
-                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
-                        PHP e outras faz com que possa se usar o melhor de cada
-                        linguagem para manipulação dos dados.</li>
-                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
-                        usuário.</li>
-                        <li>Herança entre tabelas (similar a herança de classes em
-                        Python/PHP).</li>
-                    </ul>
+                    <p>É necessário instalar o pacote psycopg versão 2.x. Em
+                    sistemas debian like ele se chama
+                    <strong>python-psycopg2</strong>. Instalado o suporte, você
+                    usa assim:</p>
+
+                    <code>
+# Importa, abre conexão e seta o cursor
+import psycopg2
+conn = psycopg2.connect("dbname=test user=postgres")
+cur = conn.cursor()
+
+# Faz a query
+cur.execute('SELECT author,title,time FROM "musics" order by "rating" desc')
+
+# Pega cada linha como uma lista e mostra resultados, ex:
+# Janis Joplin canta 'Summertime' em 4:07 minutos
+for music in cur.fetchall():
+    print "%s canta %s em %s minutos" % music
+
+# Se você fez alterações na base também vai precisar do conn.commit(), pois
+# PostgreSQL usa transações
+# Fecha cursor e conexão
+cur.close()
+conn.close()
+                    </code>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Conectando com o Django</h2>
+
+                    <p>O Django, escrito em Python, também usa o psycopg2 como
+                    driver, logo instale ele e:</p>
+
+                    <code>
+# No arquivo settings.py
+DATABASES = {¬
+    'default': {¬
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+...
+
+# Já no shell pegamos cada linha como um objeto e mostramos os resultados, ex:
+# Janis Joplin canta 'Summertime' em 4:07 minutos
+for music in musics.objects.all():
+    print "%s canta %s em %s minutos" % (music.author,music.title,music.time)
+
+# O Django armazena a conexão usada com a base, logo podemos usar como se fosse
+# o psycopg2 puro. É útil para queries muito complexas que o ORM possa não cobrir
+from django.db import connection
+
+cur = connection.cursor()
+cur.execute('SELECT author,title,time FROM "musics" order by "rating" desc')
+for music in cur.fetchall():
+    print "%s canta %s em %s minutos" % music
+                    </code>
 
                     <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
                     </section>
