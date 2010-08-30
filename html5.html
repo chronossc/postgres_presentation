@@ -237,7 +237,7 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                 color: #999999;
                 display: block;
                 font-size: 12px;
-                left: 21px;
+                left: 10px;
                 line-height: 12px;
                 position: absolute;
             }
@@ -618,16 +618,11 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                         </li>
                         <li>Postgres shell
                         <ol>
-                            <li>select, insert, update, delete</li>
-                            <li>exibir detalhes de tabelas, métodos, etc ...</li>
+                            <li><a class='goto' href='#slide9'>create table, select, insert, update, delete</a></li>
+                            <li><a class='goto' href='#slide12'>exibir detalhes de tabelas, métodos, etc ...</a></li>
                         </ol>
                         </li>
-                        <li>Permissionamento de usuários no PostgreSQL
-                        <ol>
-                            <li>createuser</li>
-                            <li>pg_hba.conf</li>
-                        </ol>
-                        </li>
+                        <li><a class='goto' href='#slide14'>Permissionamento de usuários</a></li>
                         <li>Conectando com o PHP
                         <ol>
                             <li>Habilitando suporte</li>
@@ -833,6 +828,397 @@ EOF
  ~ $ # é mais difícil para trabalhar se você for editar/consultar o arquivo)
  ~ $ pg_dump -U felipe --column-inserts test_db
                     </code>
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>CREATE TABLE, SELECT, INSERT, UPDATE, DELETE</h2>
+
+                    <p>As operações usando PostgreSQL são bastante similares a
+                    outros SGBDs, com alguns detalhes quanto
+                    a nomes de coluna, campos para ID,
+                    etc. Vamos a um exemplo usando a
+                    tabela 'user' do PostgreSQL, que mostra os usuários com sessões
+                    abertas:</p>
+
+                    <code>
+test_db=# select * from user;
+   current_user
+-------------------
+ felipe.prenholato
+(1 row)
+
+test_db=# create table user (
+  "id" serial NOT NULL PRIMARY KEY,
+  "username" varchar(50),
+  "dataCriacao" timestamp with time zone
+);
+ERROR:  syntax error at or near "user"
+LINE 1: create table user (
+                     ^
+                    </code>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>CREATE TABLE, SELECT, INSERT, UPDATE, DELETE</h2>
+
+                    <p>Como a tabela user é um nome privado, nós
+                    precisamos colocar entre aspas (") para poder usar ela como
+                    uma tabela de nossa base:</p>
+
+                    <code>
+test_db=# create table "user" (
+  "id" serial NOT NULL PRIMARY KEY,
+  "username" varchar(50),
+  "dataCriacao" timestamp with time zone
+);
+NOTICE:  CREATE TABLE will create implicit sequence "user_id_seq" for serial column "user.id"
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "user_pkey" for table "user"
+CREATE TABLE
+
+test_db=# insert into "user" (username,"dataCriacao") values ('felipe',NOW()), ('zé',NOW()), ('joão',NOW());
+INSERT 0 3
+test_db=# insert into user (username,"dataCriacao") values ('felipe',NOW()), ('zé',NOW()), ('joão',NOW());
+ERROR:  syntax error at or near "user"
+LINE 1: insert into user (username,"dataCriacao") values ('felipe',N...
+                    ^
+                    </code>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>CREATE TABLE, SELECT, INSERT, UPDATE, DELETE</h2>
+
+                    <p>As aspas duplas também se aplicam para nomes de colunas
+                    com caracteres em maiusculas, poiso o PostgreSQL é case
+                    sensitive:</p>
+
+                    <code>
+test_db=# select id,username,dataCriacao from "user" limit 1;
+ERROR:  column "datacriacao" does not exist
+LINE 1: select id,username,dataCriacao from "user" limit 1;
+                           ^
+test_db=# select id,username,"dataCriacao" from "user" limit 1;
+ id | username |          dataCriacao          
+----+----------+-------------------------------
+  1 | felipe   | 2010-08-30 11:38:51.656579-03
+(1 row)
+
+test_db=# update "user" set "dataCriacao" = NOW();
+UPDATE 3
+
+test_db=# delete from "user";
+DELETE 3
+                    </code>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Exibir detalhes de tabelas, métodos, etc ...</h2>
+
+                    <p>No PostgreSQL é possível exibir vários detalhes de
+                    tabelas, métodos, servidores e outras coisas com os
+                    comandos <strong>\d*</strong>:</p>
+
+                    <code>
+test_db=# \dt
+             List of relations
+ Schema | Name | Type  |       Owner       
+--------+------+-------+-------------------
+ public | user | table | felipe.prenholato
+(1 row)
+
+test_db=# \d user
+                                    Table "public.user"
+   Column    |           Type           |                     Modifiers                     
+-------------+--------------------------+---------------------------------------------------
+ id          | integer                  | not null default nextval('user_id_seq'::regclass)
+ username    | character varying(50)    | 
+ dataCriacao | timestamp with time zone | 
+Indexes:
+    "user_pkey" PRIMARY KEY, btree (id)
+                    </code>
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Exibir detalhes de tabelas, métodos, etc ...</h2>
+                    <p>Comandos \d* mais usados:</p>
+                    <code>
+(options: S = show system objects, + = additional detail)
+\d[S+]                 list tables, views, and sequences
+\d[S+]  NAME           describe table, view, sequence, or index
+\da[+]  [PATTERN]      list aggregates
+\db[+]  [PATTERN]      list tablespaces
+\dd[S]  [PATTERN]      show comments on objects
+\df[antw][S+] [PATRN]  list [only agg/normal/trigger/window] functions
+\dg[+]  [PATTERN]      list roles (groups)
+\di[S+] [PATTERN]      list indexes
+\dl                    list large objects, same as \lo_list
+\do[S]  [PATTERN]      list operators
+\dp     [PATTERN]      list table, view, and sequence access privileges
+\ds[S+] [PATTERN]      list sequences
+\dt[S+] [PATTERN]      list tables
+\dT[S+] [PATTERN]      list data types
+\du[+]  [PATTERN]      list roles (users)
+\dv[S+] [PATTERN]      list views
+                    </code>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Permissionamento de usuários</h2>
+                    <p>Você pode criar usuários pelo
+                    <strong>createuser</strong>, mas o permissionamento dele é
+                    feito através do arquivo pg_hba.conf. Ele é achado em uma
+                    das seguintes localizações (dependendo da distro
+                    Linux):</p>
+                    <ul>
+                        <li><strong>/var/lib/postgresql/&lt;PG_VERSION&gt;/data/pg_hba.conf</strong></li>
+                        <li><strong>/etc/postgresql/&lt;PG_VERSION&gt;/main/pg_hba.conf</strong></li>
+                    </ul>
+                    <p>Nele é possível configurar os acessos para:</p>
+                    <ul>
+                        <li>diferentes tipos de autenticação, "trust", "password" e "indent" são os mais usados.</li>
+                        <li>diferente usuários ou grupos de usuários ou uma lista de ambos.</li>
+                        <li>uma base de dados específica, uma lista delas ou todas.</li>
+                        <li>um ou mais IP, range de IPs ou sockets (e aceitando IPV6).</li>
+                    </ul>
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Permissionamento de usuários</h2>
+                    <p>Exemplo de um arquivo pg_hba.conf:</p>
+                    <code>
+# TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
+# "local" is for Unix domain socket connections only
+# "host" is for IPv4 or IPv6 connections only
+
+# todos acessam a test_db
+local   test_db     all                               trust
+# só o felipe, logado como felipe no servidor, acessa a felipe_db
+local   felipe_db   felipe                            indent
+
+# Usuários do grupo serviceusers tem acesso na rede 172.0.0.* com 
+# autenticaçaõ via senha. Para criar um 'grupo' no PosgreSQL:
+# create role servicesusers; grant mygroup to felipe,juliana;
+host    services    +servicesusers   172.0.0.1/32     password
+
+# Meu usuário felipe tem acesso a base de dados do amarok via socket ou web
+# somente para localhost e usando senha, para digamos, integrar uma aplicação
+# django com a base de dados usada pelo amarok :)
+local   amarokdb   felipe                             password
+host    amarokdb   felipe       127.0.0.1/32          password
+                    </code>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Funcionalidades mais interessantes</h2>
+
+                    <ul>
+                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
+                        'read locks' assegurando o principio ACID (atomicity, consistency,
+                        isolation, durability), que garante a consistência da base.</li>
+                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
+                        indíces criados pelos usuários.</li>
+                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
+                        um tipo de programação bastante complexa mais perto da engine da
+                        base de dados, garantindo melhor performance.</li>
+                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
+                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
+                        PHP e outras faz com que possa se usar o melhor de cada
+                        linguagem para manipulação dos dados.</li>
+                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
+                        usuário.</li>
+                        <li>Herança entre tabelas (similar a herança de classes em
+                        Python/PHP).</li>
+                    </ul>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Funcionalidades mais interessantes</h2>
+
+                    <ul>
+                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
+                        'read locks' assegurando o principio ACID (atomicity, consistency,
+                        isolation, durability), que garante a consistência da base.</li>
+                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
+                        indíces criados pelos usuários.</li>
+                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
+                        um tipo de programação bastante complexa mais perto da engine da
+                        base de dados, garantindo melhor performance.</li>
+                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
+                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
+                        PHP e outras faz com que possa se usar o melhor de cada
+                        linguagem para manipulação dos dados.</li>
+                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
+                        usuário.</li>
+                        <li>Herança entre tabelas (similar a herança de classes em
+                        Python/PHP).</li>
+                    </ul>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Funcionalidades mais interessantes</h2>
+
+                    <ul>
+                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
+                        'read locks' assegurando o principio ACID (atomicity, consistency,
+                        isolation, durability), que garante a consistência da base.</li>
+                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
+                        indíces criados pelos usuários.</li>
+                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
+                        um tipo de programação bastante complexa mais perto da engine da
+                        base de dados, garantindo melhor performance.</li>
+                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
+                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
+                        PHP e outras faz com que possa se usar o melhor de cada
+                        linguagem para manipulação dos dados.</li>
+                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
+                        usuário.</li>
+                        <li>Herança entre tabelas (similar a herança de classes em
+                        Python/PHP).</li>
+                    </ul>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Funcionalidades mais interessantes</h2>
+
+                    <ul>
+                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
+                        'read locks' assegurando o principio ACID (atomicity, consistency,
+                        isolation, durability), que garante a consistência da base.</li>
+                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
+                        indíces criados pelos usuários.</li>
+                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
+                        um tipo de programação bastante complexa mais perto da engine da
+                        base de dados, garantindo melhor performance.</li>
+                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
+                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
+                        PHP e outras faz com que possa se usar o melhor de cada
+                        linguagem para manipulação dos dados.</li>
+                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
+                        usuário.</li>
+                        <li>Herança entre tabelas (similar a herança de classes em
+                        Python/PHP).</li>
+                    </ul>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Funcionalidades mais interessantes</h2>
+
+                    <ul>
+                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
+                        'read locks' assegurando o principio ACID (atomicity, consistency,
+                        isolation, durability), que garante a consistência da base.</li>
+                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
+                        indíces criados pelos usuários.</li>
+                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
+                        um tipo de programação bastante complexa mais perto da engine da
+                        base de dados, garantindo melhor performance.</li>
+                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
+                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
+                        PHP e outras faz com que possa se usar o melhor de cada
+                        linguagem para manipulação dos dados.</li>
+                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
+                        usuário.</li>
+                        <li>Herança entre tabelas (similar a herança de classes em
+                        Python/PHP).</li>
+                    </ul>
+
+                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
+                    </section>
+                </div>
+
+                <div class="slide">
+                    <style>
+                    </style>
+                    <section class="intro text">
+                    <h2>Funcionalidades mais interessantes</h2>
+
+                    <ul>
+                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
+                        'read locks' assegurando o principio ACID (atomicity, consistency,
+                        isolation, durability), que garante a consistência da base.</li>
+                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
+                        indíces criados pelos usuários.</li>
+                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
+                        um tipo de programação bastante complexa mais perto da engine da
+                        base de dados, garantindo melhor performance.</li>
+                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
+                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
+                        PHP e outras faz com que possa se usar o melhor de cada
+                        linguagem para manipulação dos dados.</li>
+                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
+                        usuário.</li>
+                        <li>Herança entre tabelas (similar a herança de classes em
+                        Python/PHP).</li>
+                    </ul>
+
                     <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
                     </section>
                 </div>
