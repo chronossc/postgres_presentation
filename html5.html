@@ -622,7 +622,7 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                             <li><a class='goto' href='#slide12'>exibir detalhes de tabelas, métodos, etc ...</a></li>
                         </ol>
                         </li>
-                        <li><a class='goto' href='#slide14'>Permissionamento de usuários</a></li>
+                        <li><a class='goto' href='#slide14'>Permissionamento de usuários</a> <a class='goto' href='#slide15'>(exemplo)</a></li>
                         <li>Conectando com o PHP
                         <ol>
                             <li>Habilitando suporte</li>
@@ -999,9 +999,9 @@ Indexes:
                     <h2>Permissionamento de usuários</h2>
                     <p>Você pode criar usuários pelo
                     <strong>createuser</strong>, mas o permissionamento dele é
-                    feito através do arquivo pg_hba.conf. Ele é achado em uma
-                    das seguintes localizações (dependendo da distro
-                    Linux):</p>
+                    feito através do arquivo pg_hba.conf. O arquivo contém uma
+                    rica documentação e é achado em uma das seguintes
+                    localizações (dependendo da distro Linux):</p>
                     <ul>
                         <li><strong>/var/lib/postgresql/&lt;PG_VERSION&gt;/data/pg_hba.conf</strong></li>
                         <li><strong>/etc/postgresql/&lt;PG_VERSION&gt;/main/pg_hba.conf</strong></li>
@@ -1028,9 +1028,9 @@ Indexes:
 # "local" is for Unix domain socket connections only
 # "host" is for IPv4 or IPv6 connections only
 
-# todos acessam a test_db
+# todos acessam a test_db sem senha, mas só via socket
 local   test_db     all                               trust
-# só o felipe, logado como felipe no servidor, acessa a felipe_db
+# só o felipe, logado como felipe no servidor, acessa a felipe_db via socket
 local   felipe_db   felipe                            indent
 
 # Usuários do grupo serviceusers tem acesso na rede 172.0.0.* com 
