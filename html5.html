@@ -510,11 +510,23 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                             font-size: 300%;
                             font-family: "Consolas";
                         }
+
+                        .landing footer {
+                            font-family: "Lucida Grande", "Trebuchet MS", Verdana, sans-serif
+                        }
+
+                        .landing p.license {
+                            font-size: 14px;
+                            width: 80%;
+                            margin: 0 auto;
+                        }
                     </style>
                     <section class="middle landing">
                     <h1>Uma breve introdução ao uso do <br/>PostgreSQL no dia a dia.</h1>
                     <br /><br />
                     <p>Felipe Prenholato - Ago/2010</p>
+                    <br /><br />
+                    <p class='license'><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licença Creative Commons" style="border-width:0" src="cc-by-nc-sa_88x31.png" /></a><br />O conteúdo dessa obra é licenciada sob uma <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Licença Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported</a>.</p>
                     <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
                     </section>
                 </div>
@@ -530,6 +542,10 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                             width: 150px;
                             height: 600px;
                             float: left;
+                        }
+
+                        .indice .column2 {
+                            margin: 140px 0 auto 200px;
                         }
 
                         .indice .column1 h2 {
@@ -551,9 +567,6 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                             writing-mode: tb-rl;
                         }
 
-                        .indice .column2 {
-                            margin: 40px 0 auto 150px;
-                        }
 
                         .indice p {
                             font-size: 25px;
@@ -614,7 +627,7 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                             <li><a class='goto' href='#slide6'>createuser / dropuser</a></li>
                             <li><a class='goto' href='#slide7'>Populando a base / Scripting</a></li>
                             <li><a class='goto' href='#slide8'>Criando dumps (pg_dump)</a></li>
-                        </ol>
+                        ol>
                         </li>
                         <li>Postgres shell
                         <ol>
@@ -626,7 +639,7 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                         <li><a class='goto' href='#slide16'>Conectando com o PHP</a></li>
                         <li><a class='goto' href='#slide17'>Conectando com o Python</a></li>
                         <li><a class='goto' href='#slide18'>Conectando com o Django</a></li>
-                        <li>Links úteis e refêrencia</li>
+                        <li><a class='goto' href='#slide19'>Links úteis e refêrencia</a></li>
                     </ol>
                     </div>
                     <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
@@ -687,7 +700,7 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Uso básico - createdb / dropdb</h2>
 
                     <p>O PostgreSQL usa comandos próprios para operações
@@ -719,7 +732,7 @@ DROP DATABASE test_db;
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Uso básico - createuser / dropuser</h2>
 
                     <p>O <strong>createuser</strong> permite criar usuários com
@@ -755,7 +768,7 @@ DROP ROLE felipe;
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Populando a base / Scripting</h2>
 
                     <p>O PostgreSQL suporta SQL como outros SGBDs, logo ele
@@ -788,7 +801,7 @@ EOF
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Criando dumps (pg_dump)</h2>
                     
                     <p>Criar dumps é essencial para manter backups ou puxar
@@ -820,7 +833,7 @@ EOF
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>CREATE TABLE, SELECT, INSERT, UPDATE, DELETE</h2>
 
                     <p>As operações usando PostgreSQL são bastante similares a
@@ -854,7 +867,7 @@ LINE 1: create table user (
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>CREATE TABLE, SELECT, INSERT, UPDATE, DELETE</h2>
 
                     <p>Como a tabela user é um nome privado, nós
@@ -862,7 +875,7 @@ LINE 1: create table user (
                     uma tabela de nossa base:</p>
 
                     <code>
-test_db=# create table "user" (
+test_db=# create table <span style="color: #FF4600;">"user"</span> (
   "id" serial NOT NULL PRIMARY KEY,
   "username" varchar(50),
   "dataCriacao" timestamp with time zone
@@ -871,7 +884,7 @@ NOTICE:  CREATE TABLE will create implicit sequence "user_id_seq" for serial col
 NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "user_pkey" for table "user"
 CREATE TABLE
 
-test_db=# insert into "user" (username,"dataCriacao") values ('felipe',NOW()), ('zé',NOW()), ('joão',NOW());
+test_db=# insert into <span style="color: #FF4600;">"user"</span> (username,"dataCriacao") values ('felipe',NOW()), ('zé',NOW()), ('joão',NOW());
 INSERT 0 3
 test_db=# insert into user (username,"dataCriacao") values ('felipe',NOW()), ('zé',NOW()), ('joão',NOW());
 ERROR:  syntax error at or near "user"
@@ -886,7 +899,7 @@ LINE 1: insert into user (username,"dataCriacao") values ('felipe',N...
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>CREATE TABLE, SELECT, INSERT, UPDATE, DELETE</h2>
 
                     <p>As aspas duplas também se aplicam para nomes de colunas
@@ -894,20 +907,20 @@ LINE 1: insert into user (username,"dataCriacao") values ('felipe',N...
                     sensitive:</p>
 
                     <code>
-test_db=# select id,username,dataCriacao from "user" limit 1;
+test_db=# select id,username,dataCriacao from <span style="color: #FF4600;">"user"</span> limit 1;
 ERROR:  column "datacriacao" does not exist
 LINE 1: select id,username,dataCriacao from "user" limit 1;
                            ^
-test_db=# select id,username,"dataCriacao" from "user" limit 1;
+test_db=# select id,username,<span style="color: #FF4600;">"dataCriacao"</span> from <span style="color: #FF4600;">"user"</span> limit 1;
  id | username |          dataCriacao          
 ----+----------+-------------------------------
   1 | felipe   | 2010-08-30 11:38:51.656579-03
 (1 row)
 
-test_db=# update "user" set "dataCriacao" = NOW();
+test_db=# update <span style="color: #FF4600;">"user"</span> set <span style="color: #FF4600;">"dataCriacao"</span> = NOW();
 UPDATE 3
 
-test_db=# delete from "user";
+test_db=# delete from <span style="color: #FF4600;">"user"</span>;
 DELETE 3
                     </code>
 
@@ -918,7 +931,7 @@ DELETE 3
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Exibir detalhes de tabelas, métodos, etc ...</h2>
 
                     <p>No PostgreSQL é possível exibir vários detalhes de
@@ -950,24 +963,24 @@ Indexes:
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Exibir detalhes de tabelas, métodos, etc ...</h2>
                     <p>Comandos \d* mais usados:</p>
                     <code>
 (options: S = show system objects, + = additional detail)
-\d[S+]                 list tables, views, and sequences
-\d[S+]  NAME           describe table, view, sequence, or index
+<strong style="color: #FF4600;">\d[S+]                 list tables, views, and sequences</strong>
+<strong style="color: #FF4600;">\d[S+]  NAME           describe table, view, sequence, or index</strong>
 \da[+]  [PATTERN]      list aggregates
 \db[+]  [PATTERN]      list tablespaces
 \dd[S]  [PATTERN]      show comments on objects
-\df[antw][S+] [PATRN]  list [only agg/normal/trigger/window] functions
+<strong style="color: #FF4600;">\df[antw][S+] [PATRN]  list [only agg/normal/trigger/window] functions</strong>
 \dg[+]  [PATTERN]      list roles (groups)
 \di[S+] [PATTERN]      list indexes
 \dl                    list large objects, same as \lo_list
 \do[S]  [PATTERN]      list operators
-\dp     [PATTERN]      list table, view, and sequence access privileges
+<strong style="color: #FF4600;">\dp     [PATTERN]      list table, view, and sequence access privileges</strong>
 \ds[S+] [PATTERN]      list sequences
-\dt[S+] [PATTERN]      list tables
+<strong style="color: #FF4600;">\dt[S+] [PATTERN]      list tables</strong>
 \dT[S+] [PATTERN]      list data types
 \du[+]  [PATTERN]      list roles (users)
 \dv[S+] [PATTERN]      list views
@@ -980,7 +993,7 @@ Indexes:
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Permissionamento de usuários</h2>
                     <p>Você pode criar usuários pelo
                     <strong>createuser</strong>, mas o permissionamento dele é
@@ -1005,7 +1018,7 @@ Indexes:
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Permissionamento de usuários</h2>
                     <p>Exemplo de um arquivo pg_hba.conf:</p>
                     <code>
@@ -1037,7 +1050,7 @@ host    amarokdb   felipe       127.0.0.1/32          password
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Conectando com o PHP</h2>
 
                     <p>É necessário compilar o php com
@@ -1073,7 +1086,7 @@ pg_close($dbconn);
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Conectando com o Python</h2>
 
                     <p>É necessário instalar o pacote psycopg versão 2.x. Em
@@ -1109,7 +1122,7 @@ conn.close()
                 <div class="slide">
                     <style>
                     </style>
-                    <section class="intro text">
+                    <section class="text">
                     <h2>Conectando com o Django</h2>
 
                     <p>O Django, escrito em Python, também usa o psycopg2 como
@@ -1143,334 +1156,30 @@ for music in cur.fetchall():
 
                 <div class="slide">
                     <style>
+                        /* if you have many links, this should resolve problem with space ;)
+                        section.ref ul li {
+                            font-size: 16px;
+                            line-height: 18px;
+                            padding: 3px;
+                        }*/
                     </style>
-                    <section class="intro text">
-                    <h2>Funcionalidades mais interessantes</h2>
+                    <section class="ref text">
+                    <h2>Links úteis e refêrencia</h2>
 
                     <ul>
-                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
-                        'read locks' assegurando o principio ACID (atomicity, consistency,
-                        isolation, durability), que garante a consistência da base.</li>
-                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
-                        indíces criados pelos usuários.</li>
-                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
-                        um tipo de programação bastante complexa mais perto da engine da
-                        base de dados, garantindo melhor performance.</li>
-                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
-                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
-                        PHP e outras faz com que possa se usar o melhor de cada
-                        linguagem para manipulação dos dados.</li>
-                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
-                        usuário.</li>
-                        <li>Herança entre tabelas (similar a herança de classes em
-                        Python/PHP).</li>
+                        <li>Esta apresentação é um projeto open source, livre para uso não
+                        comercial, seu código está no github: <a href="http://github.com/chronossc/postgres_presentation/">http://github.com/chronossc/postgres_presentation/</a></li>
+                        <li>Manuais oficiais do PostgreSQL (em inglês): <a href="http://www.postgresql.org/docs/manuals/">http://www.postgresql.org/docs/manuals/</a></li>
+                        <li>Traduções da documentação do PostgreSQL: <a href="http://www.postgresql.org.br/docs/">http://www.postgresql.org.br/docs/</a></li>
+                        <li>PostgreSQL na Wikipedia, um pouco de história: <a href="http://en.wikipedia.org/wiki/Postgresql/">http://en.wikipedia.org/wiki/Postgresql/</a></li>
+                        <li>PostgreSQL vs MySQL no WikiVS: <a href="http://www.wikivs.com/wiki/MySQL_vs_PostgreSQL">http://www.wikivs.com/wiki/MySQL_vs_PostgreSQL</a></li>
+                        <li>PHP e PostgreSQL: <a href="http://www.php.net/manual/en/book.pgsql.php">http://www.php.net/manual/en/book.pgsql.php</a></li>
+                        <li>Python e PostgreSQL - psycopg: <a href="http://initd.org/psycopg/docs/">http://initd.org/psycopg/docs/</a></li>
+                        <li>Listas de discussão sobre PostgreSQL: <a href="http://archives.postgresql.org/">http://archives.postgresql.org/</a></li>
+                        <li>Django project: <a href="http://www.djangoproject.org">http://www.djangoproject.org</a></li>
                     </ul>
 
                     <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
-                    </section>
-                </div>
-
-                <div class="slide">
-                    <style>
-                    </style>
-                    <section class="intro text">
-                    <h2>Funcionalidades mais interessantes</h2>
-
-                    <ul>
-                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
-                        'read locks' assegurando o principio ACID (atomicity, consistency,
-                        isolation, durability), que garante a consistência da base.</li>
-                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
-                        indíces criados pelos usuários.</li>
-                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
-                        um tipo de programação bastante complexa mais perto da engine da
-                        base de dados, garantindo melhor performance.</li>
-                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
-                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
-                        PHP e outras faz com que possa se usar o melhor de cada
-                        linguagem para manipulação dos dados.</li>
-                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
-                        usuário.</li>
-                        <li>Herança entre tabelas (similar a herança de classes em
-                        Python/PHP).</li>
-                    </ul>
-
-                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
-                    </section>
-                </div>
-
-                <div class="slide">
-                    <style>
-                    </style>
-                    <section class="intro text">
-                    <h2>Funcionalidades mais interessantes</h2>
-
-                    <ul>
-                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
-                        'read locks' assegurando o principio ACID (atomicity, consistency,
-                        isolation, durability), que garante a consistência da base.</li>
-                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
-                        indíces criados pelos usuários.</li>
-                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
-                        um tipo de programação bastante complexa mais perto da engine da
-                        base de dados, garantindo melhor performance.</li>
-                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
-                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
-                        PHP e outras faz com que possa se usar o melhor de cada
-                        linguagem para manipulação dos dados.</li>
-                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
-                        usuário.</li>
-                        <li>Herança entre tabelas (similar a herança de classes em
-                        Python/PHP).</li>
-                    </ul>
-
-                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
-                    </section>
-                </div>
-
-                <div class="slide">
-                    <style>
-                    </style>
-                    <section class="intro text">
-                    <h2>Funcionalidades mais interessantes</h2>
-
-                    <ul>
-                        <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
-                        'read locks' assegurando o principio ACID (atomicity, consistency,
-                        isolation, durability), que garante a consistência da base.</li>
-                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
-                        indíces criados pelos usuários.</li>
-                        <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
-                        um tipo de programação bastante complexa mais perto da engine da
-                        base de dados, garantindo melhor performance.</li>
-                        <li>Suporte a Stored Procedures/Funções com suporte a vários tipos
-                        de linguagem como Perl, Lua, Python, Ruby, Bash, C/C++,
-                        PHP e outras faz com que possa se usar o melhor de cada
-                        linguagem para manipulação dos dados.</li>
-                        <li>Tipos de dados, objetos, operadores e outros podem criados pelo
-                        usuário.</li>
-                        <li>Herança entre tabelas (similar a herança de classes em
-                        Python/PHP).</li>
-                    </ul>
-
-                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
-                    </section>
-                </div>
-
-                <div class="slide">
-                    <style>
-                        #video-column {
-                            float: left;
-                            width: 50%;
-                            margin-top: 20px;
-                        }
-                        #reflection-button {
-                            margin: 20px 0;
-                        }
-                        #audio-column {
-                            float: left;
-                            width: 45%;
-                            margin-top: 120px;
-                        }
-                        .media-buttons {
-                            margin: 40px 0;
-                        }
-                    </style>
-                    <header><span class="html">HTML</span> <h1>Audio + Video</h1></header>
-                    <section>
-                    <pre>&lt;<b>audio</b> src="sound.mp3" <b>controls</b>&gt;&lt;/audio&gt;
-document.getElementById("audio").<b>muted</b> = false;
-
-&lt;<b>video</b> src="movie.mp4" <b>autoplay</b> <b>controls</b>&gt;&lt;/video&gt;
-document.getElementById("video").<b>play</b>();
-</pre>
-                    <div id="video-column" class="center">
-                        <input type="button" id="reflection-button" onclick="addReflection()" value="Add CSS reflection to video" />
-                        <video width="390" id="clip" controls>
-                        <source src="src/chrome-japan.webm" type="video/webm" />
-                        <source src="src/chrome-japan.mp4" type="video/mp4" />
-                        <source src="src/chrome_japan.ogv" type="video/ogg" />
-                        Your browser does not support the video tag
-                        </video>
-                        <div class="media-buttons">
-                            <input type="button" id="play-button" onclick="PlayVideo()"; value="Play" />
-                            <input type="button" id="pause-button" onclick="PauseVideo()"; value="Pause" disabled />
-                            <input type="button" id="mute" onclick="MuteUnMute()" value="Mute" />
-                        </div>
-                    </div>
-
-                    <div id="audio-column" class="center">
-                        <audio id="audio-clip" width="670" controls>
-                        <source src="src/rushus-modal_blues.mp3" type="audio/mpeg" />
-                        <source src="src/rushus-modal_blues.webm" type="audio/webm" />
-                        Your browser does not support the audio tag
-                        </audio>
-                        <div class="media-buttons">
-                            <input type=button id="audio-play-button" onclick="PlayAudio()" value="Play" />
-                            <input type=button id="audio-pause-button" onclick="PauseAudio()" value="Pause" disabled />
-                            <input type=button id="audio-mute" onclick="MuteUnMuteAudio()" value="Mute" />
-                        </div>
-                    </div>
-                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :)</footer>
-                    </section>
-                    <script>
-                        var videoClip = document.getElementById('clip');
-                        var playButton = document.getElementById('play-button');
-                        var pauseButton = document.getElementById('pause-button');
-
-                        function PlayVideo() {
-                            videoClip.play();
-                            playButton.disabled = true;
-                            pauseButton.disabled = false;
-                        }
-
-                        function PauseVideo() {
-                            videoClip.pause();
-                            playButton.disabled = false;
-                            pauseButton.disabled = true;
-                        }
-
-                        function MuteUnMute() {
-                            document.getElementById('mute').value = videoClip.muted ? 'Mute' : 'Unmute';
-                            videoClip.muted = videoClip.muted ? false : true;
-                        }
-
-                        function OnFinished() {
-                            playButton.disabled = false;
-                            pauseButton.disabled = true;
-                        }
-
-                        function addReflection() {
-                            videoClip.style.webkitBoxReflect = videoClip.style.webkitBoxReflect !== '' ? '' : "below 0px -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), color-stop(0.55, transparent), to(white))";
-                        }
-                    </script>
-
-                    <script>
-                        var audioClip = document.getElementById('audio-clip');
-                        var audioPlayButton = document.getElementById('audio-play-button');
-                        var audioPauseButton = document.getElementById('audio-pause-button');
-                        audioClip.addEventListener('ended', OnAudioFinished, false);
-
-                        function PlayAudio() {
-                            audioClip.play();
-                            audioPlayButton.disabled = true;
-                            audioPauseButton.disabled = false;
-                        }
-
-                        function PauseAudio() {
-                            audioClip.pause();
-                            audioPlayButton.disabled = false;
-                            audioPauseButton.disabled = true;
-                        }
-
-                        function MuteUnMuteAudio() {
-                            document.getElementById('audio-mute').value = audioClip.muted ? 'Mute' : 'Unmute';
-                            audioClip.muted = audioClip.muted ? false : true;
-                        }
-
-                        function OnAudioFinished() {
-                            audioPlayButton.disabled = false;
-                            audioPauseButton.disabled = true;
-                        }
-                    </script>
-                </div>
-
-                <div class="slide">
-                    <style>
-                        #columns-no-example {
-                            -webkit-column-count: 2;
-                            -webkit-column-rule: 1px solid #bbb;
-                            -webkit-column-gap: 2em;
-                            -moz-column-count: 2;
-                            -moz-column-rule: 1px solid #bbb;
-                            -moz-column-gap: 2em;
-                            column-count: 2;
-                            column-rule: 1px solid #bbb;
-                            column-gap: 2em;
-                        }
-                        #columns-no-example p {
-                            font-size: 15px;
-                        }
-                    </style>
-                    <header><span class="css">CSS</span> <h1>Columns</h1></header>
-                    <section>
-                    <pre>-webkit-<b>column-count</b>: <span id="columns-no-value">2</span>; <input type="range" min="1" max="6" value="2" onchange="changeColumnNoSlider(event)">
--webkit-<b>column-rule</b>: 1px solid #bbb;
--webkit-<b>column-gap</b>: 2em;</pre>
-
-                    <div id="columns-no-example" class="example">
-                        <p>
-                        In March 1936, an unusual confluence of forces occurred in 
-                        Santa Clara County.
-                        </p>
-                        <p>
-                        A long cold winter delayed the blossoming of the millions of 
-                        cherry, apricot, peach, and prune plum trees covering hundreds 
-                        of square miles of the Valley floor. Then, unlike many years, 
-                        the rains that followed were light and too early to knock 
-                        the blossoms from their branches.
-                        </p>
-                        <p>
-                        Instead, by the billions, they all burst open at once. 
-                        Seemingly overnight, the ocean of green that was the Valley 
-                        turned into a low, soft, dizzyingly perfumed cloud of pink 
-                        and white. Uncounted bees and yellow jackets, newly born, 
-                        raced out of their hives and holes, overwhelmed by this 
-                        impossible banquet.
-                        </p>
-                        <p>
-                        Then came the wind.
-                        </p>
-                        <p>
-                        It roared off the Pacific Ocean, through the nearly 
-                        uninhabited passes of the Santa Cruz Mountains and then, 
-                        flattening out, poured down into the great alluvial plains 
-                        of the Valley. A tidal bore of warm air, it tore along the 
-                        columns of trees, ripped the blossoms apart and carried them 
-                        off in a fluttering flood of petals like foam rolling up a 
-                        beach.
-                        </p>
-                        <p>
-                        This perfumed blizzard hit Stevens Creek Boulevard, a two-lane
-                        road with a streetcar line down its center, that was the main
-                        road in the West Valley. It froze traffic, as drivers found
-                        themselves lost in a soft, muted whiteout. Only the streetcar,
-                        its path predetermined, passed on...
-                        </p>
-                    </div>
-                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :)</footer>
-                    </section>
-
-                    <script>
-                        function changeColumnNoSlider(event) {
-                            var val = event.target.value;
-                            document.getElementById('columns-no-value').innerHTML = val;
-                            document.getElementById('columns-no-example').style.webkitColumnCount = val;
-
-                        }
-                    </script>
-                </div>
-
-                <div class="slide">
-                    <style>
-                        span.space {
-                            padding: 0 5px;
-                        }
-                    </style>
-                    <header><h1>Chrome Frame</h1></header>
-                    <section>
-                    <ul class="bullets">
-                        <li>Minimal effort for bringing IE6, 7 and 8 up to the latest HTML5 technologies</li>
-                        <li>Two ways to get your websites ready for Chrome Frame:</li>
-        	        </ul>
-      		        <p>Client side:</p>
-      			<pre>&lt;meta http-equiv="X-UA-Compatible" content="chrome=1"></pre>
-      		        <p>Server side:</p>
-      			<pre>X-UA-Compatible: chrome=1</pre>
-      		        <p style="font-size: 30px">
-                    Try to load this presentation in IE!
-                    </p>
-                    <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :)</footer>
                     </section>
                 </div>
 
