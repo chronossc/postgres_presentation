@@ -627,9 +627,9 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                             <li><a class='goto' href='#slide6'>createuser / dropuser</a></li>
                             <li><a class='goto' href='#slide7'>Populando a base / Scripting</a></li>
                             <li><a class='goto' href='#slide8'>Criando dumps (pg_dump)</a></li>
-                        ol>
+                        </ol>
                         </li>
-                        <li>Postgres shell
+                        <li>PostgreSQL shell
                         <ol>
                             <li><a class='goto' href='#slide9'>create table, select, insert, update, delete</a></li>
                             <li><a class='goto' href='#slide12'>exibir detalhes de tabelas, métodos, etc ...</a></li>
@@ -639,7 +639,7 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                         <li><a class='goto' href='#slide16'>Conectando com o PHP</a></li>
                         <li><a class='goto' href='#slide17'>Conectando com o Python</a></li>
                         <li><a class='goto' href='#slide18'>Conectando com o Django</a></li>
-                        <li><a class='goto' href='#slide19'>Links úteis e refêrencia</a></li>
+                        <li><a class='goto' href='#slide19'>Links úteis e referência</a></li>
                     </ol>
                     </div>
                     <footer>This presentation engine is entire based on http://slides.html5rocks.com with only some cuts :). Navigate with directional keys, zoom/zoomout with Ctrl + +/-.</footer>
@@ -678,8 +678,8 @@ This presentation engine is entire based on http://slides.html5rocks.com with on
                         <li>Transações usando MVCC (Multi-Version Concurrency Control), que elimina o uso de
                         'read locks' assegurando o principio ACID (atomicity, consistency,
                         isolation, durability), que garante a consistência da base.</li>
-                        <li>Suporte nativo a indíces B+-tree, hash table, GiST bem como suporte a
-                        indíces criados pelos usuários.</li>
+                        <li>Suporte nativo a índices B+-tree, hash table, GiST bem como suporte a
+                        índices criados pelos usuários.</li>
                         <li>Ótimo suporte a Triggers e Rules, que permitem que seja feito
                         um tipo de programação bastante complexa mais perto da engine da
                         base de dados, garantindo melhor performance.</li>
@@ -764,7 +764,6 @@ DROP ROLE felipe;
                     </section>
                 </div>
 
-
                 <div class="slide">
                     <style>
                     </style>
@@ -775,7 +774,7 @@ DROP ROLE felipe;
                     suporta scripting. Dumps são nada mais que scripts, e é
                     normal que precisemos sempre popular bases para testes ou
                     desenvolvimento. Existem várias maneiras de se popular uma
-                    base e de enviar comandos SQL para o PosgreSQL sem entrar
+                    base e de enviar comandos SQL para o PostgreSQL sem entrar
                     em seu shell:</p>
 
                     <code>
@@ -903,7 +902,7 @@ LINE 1: insert into user (username,"dataCriacao") values ('felipe',N...
                     <h2>CREATE TABLE, SELECT, INSERT, UPDATE, DELETE</h2>
 
                     <p>As aspas duplas também se aplicam para nomes de colunas
-                    com caracteres em maiusculas, poiso o PostgreSQL é case
+                    com caracteres em maiúsculas, pois o o PostgreSQL é case
                     sensitive:</p>
 
                     <code>
@@ -941,14 +940,14 @@ DELETE 3
                     <code>
 test_db=# \dt
              List of relations
- Schema | Name | Type  |       Owner       
+ Schema | Name | Type  |       Owner
 --------+------+-------+-------------------
  public | user | table | felipe.prenholato
 (1 row)
 
 test_db=# \d user
                                     Table "public.user"
-   Column    |           Type           |                     Modifiers                     
+   Column    |           Type           |                     Modifiers
 -------------+--------------------------+---------------------------------------------------
  id          | integer                  | not null default nextval('user_id_seq'::regclass)
  username    | character varying(50)    | 
@@ -1032,7 +1031,7 @@ local   test_db     all                               trust
 local   felipe_db   felipe                            indent
 
 # Usuários do grupo serviceusers tem acesso na rede 172.0.0.* com 
-# autenticação via senha. Para criar um 'grupo' no PosgreSQL:
+# autenticação via senha. Para criar um 'grupo' no PostgreSQL:
 # create role servicesusers; grant mygroup to felipe,juliana;
 host    services    +servicesusers   172.0.0.1/32     password
 
@@ -1130,8 +1129,8 @@ conn.close()
 
                     <code>
 # No arquivo settings.py
-DATABASES = {¬
-    'default': {¬
+DATABASES = {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 ...
 
@@ -1164,14 +1163,14 @@ for music in cur.fetchall():
                         }*/
                     </style>
                     <section class="ref text">
-                    <h2>Links úteis e refêrencia</h2>
+                    <h2>Links úteis e referência</h2>
 
                     <ul>
                         <li>Esta apresentação é um projeto open source, livre para uso não
                         comercial, seu código está no github: <a href="http://github.com/chronossc/postgres_presentation/">http://github.com/chronossc/postgres_presentation/</a></li>
                         <li>Manuais oficiais do PostgreSQL (em inglês): <a href="http://www.postgresql.org/docs/manuals/">http://www.postgresql.org/docs/manuals/</a></li>
                         <li>Traduções da documentação do PostgreSQL: <a href="http://www.postgresql.org.br/docs/">http://www.postgresql.org.br/docs/</a></li>
-                        <li>PostgreSQL na Wikipedia, um pouco de história: <a href="http://en.wikipedia.org/wiki/Postgresql/">http://en.wikipedia.org/wiki/Postgresql/</a></li>
+                        <li>PostgreSQL na Wikipédia, um pouco de história: <a href="http://en.wikipedia.org/wiki/Postgresql/">http://en.wikipedia.org/wiki/Postgresql/</a></li>
                         <li>PostgreSQL vs MySQL no WikiVS: <a href="http://www.wikivs.com/wiki/MySQL_vs_PostgreSQL">http://www.wikivs.com/wiki/MySQL_vs_PostgreSQL</a></li>
                         <li>PHP e PostgreSQL: <a href="http://www.php.net/manual/en/book.pgsql.php">http://www.php.net/manual/en/book.pgsql.php</a></li>
                         <li>Python e PostgreSQL - psycopg: <a href="http://initd.org/psycopg/docs/">http://initd.org/psycopg/docs/</a></li>
